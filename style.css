@@ -6,120 +6,205 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(180deg, #87CEEB 0%, #E0F6FF 50%, #696969 50%, #505050 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+body::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 50%;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 50px,
+            rgba(255, 255, 255, 0.1) 50px,
+            rgba(255, 255, 255, 0.1) 100px
+        ),
+        linear-gradient(180deg, #696969 0%, #505050 100%);
+    z-index: 0;
+}
+
+body::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3%;
+    background: repeating-linear-gradient(
+        90deg,
+        #FFD700 0px,
+        #FFD700 40px,
+        transparent 40px,
+        transparent 80px
+    );
+    z-index: 1;
 }
 
 .container {
     width: 100%;
     max-width: 500px;
+    position: relative;
+    z-index: 2;
 }
 
 .booking-card {
-    background: white;
-    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 25px;
     padding: 40px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.5);
     text-align: center;
 }
 
 .title {
-    font-size: 28px;
-    font-weight: 700;
-    color: #2d3748;
+    font-size: 32px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #FF6B6B, #4ECDC4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     margin-bottom: 30px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
 }
 
 .image-container {
     width: 100%;
     margin-bottom: 30px;
-    overflow: hidden;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    overflow: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .scooty-image {
-    width: 100%;
+    max-width: 250px;
     height: auto;
     display: block;
     transition: transform 0.3s ease;
+    filter: drop-shadow(0 10px 25px rgba(0, 0, 0, 0.3));
+    animation: float 3s ease-in-out infinite;
 }
 
 .scooty-image:hover {
-    transform: scale(1.05);
+    transform: translateY(-10px) scale(1.05);
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .status-container {
     margin-bottom: 30px;
-    padding: 15px;
-    background: #f7fafc;
-    border-radius: 10px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    border-radius: 15px;
+    border: 2px solid rgba(0, 0, 0, 0.05);
 }
 
 .status-label {
     font-size: 18px;
-    color: #4a5568;
-    font-weight: 600;
+    color: #333;
+    font-weight: 700;
     margin-right: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 .status-text {
-    font-size: 20px;
-    font-weight: 700;
-    padding: 8px 20px;
-    border-radius: 20px;
+    font-size: 22px;
+    font-weight: 800;
+    padding: 10px 25px;
+    border-radius: 25px;
     display: inline-block;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 .status-text.available {
-    color: #38a169;
-    background: #c6f6d5;
+    color: white;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    box-shadow: 0 4px 15px rgba(56, 239, 125, 0.4);
 }
 
 .status-text.booked {
-    color: #e53e3e;
-    background: #fed7d7;
+    color: white;
+    background: linear-gradient(135deg, #eb3349, #f45c43);
+    box-shadow: 0 4px 15px rgba(235, 51, 73, 0.4);
 }
 
 .booking-button {
     width: 100%;
-    padding: 18px 40px;
-    font-size: 20px;
-    font-weight: 700;
+    padding: 20px 40px;
+    font-size: 22px;
+    font-weight: 800;
     border: none;
-    border-radius: 12px;
+    border-radius: 50px;
     cursor: pointer;
     transition: all 0.3s ease;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    letter-spacing: 2px;
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.booking-button::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.booking-button:hover::before {
+    width: 300px;
+    height: 300px;
 }
 
 .booking-button.available {
-    background: linear-gradient(135deg, #48bb78, #38a169);
+    background: linear-gradient(135deg, #667eea, #764ba2);
     color: white;
 }
 
 .booking-button.available:hover {
-    background: linear-gradient(135deg, #38a169, #2f855a);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(56, 161, 105, 0.4);
+    background: linear-gradient(135deg, #5568d3, #6a4093);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(102, 126, 234, 0.5);
 }
 
 .booking-button.booked {
-    background: linear-gradient(135deg, #fc8181, #e53e3e);
+    background: linear-gradient(135deg, #f093fb, #f5576c);
     color: white;
 }
 
 .booking-button.booked:hover {
-    background: linear-gradient(135deg, #e53e3e, #c53030);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(229, 62, 62, 0.4);
+    background: linear-gradient(135deg, #e082ea, #e44658);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px rgba(245, 87, 108, 0.5);
 }
 
 .booking-button:active {
@@ -129,8 +214,9 @@ body {
 .driver-info {
     margin-top: 25px;
     font-size: 16px;
-    color: #718096;
-    font-weight: 500;
+    color: #555;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 /* Responsive Design */
