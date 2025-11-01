@@ -1,37 +1,30 @@
-// Cookie utility functions
-function setCookie(name, value, hours) {
-    const date = new Date();
-    date.setTime(date.getTime() + (hours * 60 * 60 * 1000));
-    const expires = "expires=" + date.toUTCString();
-    document.cookie = name + "=" + value + ";" + expires + ";path=/";
-}
+// Firebase Configuration
+// Replace these with your own Firebase config from Firebase Console
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-function getCookie(name) {
-    const nameEQ = name + "=";
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; i++) {
-        let cookie = cookies[i];
-        while (cookie.charAt(0) === ' ') {
-            cookie = cookie.substring(1, cookie.length);
-        }
-        if (cookie.indexOf(nameEQ) === 0) {
-            return cookie.substring(nameEQ.length, cookie.length);
-        }
-    }
-    return null;
-}
+// REPLACE THIS WITH YOUR FIREBASE CONFIG
+const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+    projectId: "YOUR_PROJECT_ID",
+    storageBucket: "YOUR_PROJECT_ID.appspot.com",
+    messagingSenderId: "YOUR_SENDER_ID",
+    appId: "YOUR_APP_ID"
+};
 
-function deleteCookie(name) {
-    document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const database = getDatabase(app);
+const bookingRef = ref(database, 'taxivaxi/booking');
 
-// Booking state management
-let isBooked = false;
-
+// UI Elements
 const statusText = document.getElementById('statusText');
 const bookingButton = document.getElementById('bookingButton');
 
-function updateUI() {
+// Update UI based on booking status
+function updateUI(isBooked) {
     if (isBooked) {
         statusText.textContent = 'Booked';
         statusText.classList.remove('available');
@@ -51,32 +44,54 @@ function updateUI() {
     }
 }
 
-function loadBookingState() {
-    const savedState = getCookie('scootyBooked');
-    if (savedState === 'true') {
-        isBooked = true;
-    } else {
-        isBooked = false;
-    }
-    updateUI();
-}
+// Listen for real-time updates from Firebase
+onValue(bookingRef, (snapshot) => {
+    const data = snapshot.val();
+    const isBooked = data ? data.isBooked : false;
+    updateUI(isBooked);
+});
 
+// Toggle booking status
 function toggleBooking() {
-    isBooked = !isBooked;
-    
-    if (isBooked) {
-        // Set cookie to expire in 24 hours
-        setCookie('scootyBooked', 'true', 24);
-    } else {
-        // Delete cookie when released
-        deleteCookie('scootyBooked');
-    }
-    
-    updateUI();
+    // Get current status first
+    onValue(bookingRef, (snapshot) => {
+        const data = snapshot.val();
+        const currentStatus = data ? data.isBooked : false;
+        
+        // Toggle the status
+        const newStatus = !currentStatus;
+        const timestamp = Date.now();
+        
+        // Update Firebase (this will sync to all users)
+        set(bookingRef, {
+            isBooked: newStatus,
+            timestamp: timestamp,
+            expiresAt: timestamp + (24 * 60 * 60 * 1000) // 24 hours from now
+        });
+    }, { onlyOnce: true });
 }
-
-// Initialize on page load
-loadBookingState();
 
 // Add event listener to booking button
 bookingButton.addEventListener('click', toggleBooking);
+
+// Auto-release after 24 hours
+function checkExpiration() {
+    onValue(bookingRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data && data.isBooked && data.expiresAt) {
+            const now = Date.now();
+            if (now > data.expiresAt) {
+                // Auto-release if expired
+                set(bookingRef, {
+                    isBooked: false,
+                    timestamp: now,
+                    expiresAt: null
+                });
+            }
+        }
+    }, { onlyOnce: true });
+}
+
+// Check expiration every minute
+setInterval(checkExpiration, 60000);
+checkExpiration(); // Check immediately on load
