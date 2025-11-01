@@ -1,17 +1,17 @@
 // Firebase Configuration
-// Replace these with your own Firebase config from Firebase Console
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
 import { getDatabase, ref, set, onValue } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js';
 
-// REPLACE THIS WITH YOUR FIREBASE CONFIG
+// Your Firebase Config
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    apiKey: "AIzaSyAwfTD9EP59tTAv2UyERzfP6Ng6DOM4ouM",
+    authDomain: "taxivaxi-arp.firebaseapp.com",
+    databaseURL: "https://taxivaxi-arp-default-rtdb.firebaseio.com",
+    projectId: "taxivaxi-arp",
+    storageBucket: "taxivaxi-arp.firebasestorage.app",
+    messagingSenderId: "163103556321",
+    appId: "1:163103556321:web:70802bf4ab2e8de0d2ada0",
+    measurementId: "G-S97CVTMELC"
 };
 
 // Initialize Firebase
